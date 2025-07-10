@@ -14,7 +14,7 @@ use Ratchet\RFC6455\Messaging\CloseFrameChecker;
 use Ratchet\RFC6455\Handshake\ServerNegotiator;
 use Ratchet\RFC6455\Handshake\RequestVerifier;
 use React\EventLoop\LoopInterface;
-use GuzzleHttp\Psr7 as gPsr;
+use GuzzleHttp\Psr7\Message;
 
 /**
  * The adapter to handle WebSocket requests/responses
@@ -104,7 +104,8 @@ class WsServer implements HttpServerInterface {
     /**
      * {@inheritdoc}
      */
-    public function onOpen(ConnectionInterface $conn, RequestInterface $request = null) {
+    #[HackSupportForPHP8] public function onOpen(ConnectionInterface $conn, ?RequestInterface $request = null) { /*
+    public function onOpen(ConnectionInterface $conn, RequestInterface $request = null) { /**/
         if (null === $request) {
             throw new \UnexpectedValueException('$request can not be null');
         }
@@ -116,7 +117,7 @@ class WsServer implements HttpServerInterface {
 
         $response = $this->handshakeNegotiator->handshake($request)->withHeader('X-Powered-By', \Ratchet\VERSION);
 
-        $conn->send(gPsr\str($response));
+        $conn->send(Message::toString($response));
 
         if (101 !== $response->getStatusCode()) {
             return $conn->close();
