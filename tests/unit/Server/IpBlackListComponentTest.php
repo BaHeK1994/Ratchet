@@ -6,7 +6,7 @@ use Ratchet\Server\IpBlackList;
 /**
  * @covers Ratchet\Server\IpBlackList
  */
-class IpBlackListTest extends TestCase {
+class IpBlackListComponentTest extends TestCase {
     protected $blocker;
     protected $mock;
 
